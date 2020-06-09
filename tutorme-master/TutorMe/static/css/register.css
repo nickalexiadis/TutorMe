@@ -1,0 +1,15 @@
+textarea {
+    resize: none;
+}
+
+.fb {
+    background: #4267B2;
+}
+
+.checkboxes {
+    float: right;
+}
+
+.textarea {
+    margin-top:10px;
+}

@@ -1,0 +1,113 @@
+<!DOCTYPEhtml>
+{% load staticfiles %}
+{% load tutorme_templates_tags %}
+<html>
+    <head lang="en">
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="{% static 'images/TutorMeLogoSmall.png' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>        <script src="{% static 'javascript/typed.min.js' %}"></script>
+        <script src="{% static 'javascript/facebookAPI.js' %}"></script>
+        <script src="{% static 'javascript/EasyAutocomplete/jquery.easy-autocomplete.min.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'javascript/EasyAutocomplete/easy-autocomplete.min.css' %}">
+        <link rel="stylesheet" href="{% static 'javascript/EasyAutocomplete/easy-autocomplete.themes.min.css' %}">
+        <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        {% block head_block %}
+        {% endblock %}
+        <title>
+            TutorMe -
+            {% block title_block %}
+                TutorMe
+            {% endblock %}
+        </title>
+    </head>
+    <body class="d-flex flex-column" style="min-height: 100vh">
+        <main class="flex-fill">
+            <center>
+                <nav class="navbar navbar-expand-lg navbar-light mb-5">
+                    <img src="{% static 'images/TutorMeLogoTransparent.png' %}" class="img-fluid logo" alt="Picture of tutorme" />
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ml-auto">
+                            {% if user.is_authenticated %}
+                                <li class="nav-link">
+                                    You are logged in as {{ user_obj.first_name }}
+                                </li>
+                            {% endif %}
+                            <li class="nav-link">
+                                <h5><a href="{% url 'tutorme:index' %}"> Homepage </a></h5>
+                            </li>
+                            <li class="nav-link">
+                                <h5><a href="{% url 'tutorme:about' %}">About </a></h5>
+                            </li>
+                        {% if user.is_authenticated %}
+                            <li class="nav-link">
+                                <h5><a href="{% url 'tutorme:dashboard' %}">Dashboard </a></h5>
+                            </li>
+                            {% if not user_obj.categories %}
+                                <li class="nav-link">
+                                    <h5><a href="{% url 'tutorme:search' %}">Search </a></h5>
+                                </li>
+                            {% endif %}
+                            <li class="nav-link">
+                                <h5><a href="{% url 'tutorme:logout' %}">Logout </a></h5>
+                            </li>
+                        {% else %}
+                            <li class="nav-link">
+                                <h5><a href="{% url 'tutorme:login' %}">Login</a></h5>
+                            </li>
+                        {% endif %}
+                        </ul>
+                    </div>
+                </nav>
+                {% block body_block %}
+                {% endblock %}
+            </center>
+        </main>
+        <footer class="footer">
+            <div class="container-fluid text-center text-md-left">
+                <div class="row">
+                    <div class="col-md-6 mt-md-0 mt-3">
+                        <h5 class="text-uppercase">TutorMe Creators</h5>
+                        <p>A pleasure to serve you all.</p>
+                    </div>
+
+                    <hr class="clearfix w-100 d-md-none pb-3">
+
+                    <div class="col-md-3 mb-md-0 mb-3">
+                        <h5 class="text-uppercase">Site Map</h5>
+                        <ul class="list-unstyled href-color">
+                            {% if user.is_authenticated %}
+                                {% if not user_obj.categories %}
+                                    <li><a href="{% url 'tutorme:search' %}">Search for Tutor</a></li>
+                                {% endif %}
+                                <li><a href="{% url 'tutorme:dashboard' %}">Dashboard</a></li>
+                                <li><a href="{% url 'tutorme:logout' %}">Logout</a></li>
+                                <li><a href="{% url 'tutorme:index' %}">Homepage</a></li>
+                            {% else %}
+                                <li><a href="{% url 'tutorme:register_student' %}">Sign Up as Student</a></li>
+                                <li><a href="{% url 'tutorme:register_teacher' %}">Sign Up as Teacher</a></li>
+                                <li><a href="{% url 'tutorme:login' %}">Login</a></li>
+                            {% endif %}
+                            <li><a href="{% url 'tutorme:about' %}">About</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright text-center py-3 href-color">
+                © 2020 Copyright:
+                <a href="#"> TutorMe</a>
+            </div>
+        </footer>
+    </body>
+    <script src="{% static 'javascript/base.js' %}"></script>
+    {% block afterBody_block %}
+    {% endblock %}
+</html>

@@ -1,0 +1,102 @@
+{% extends 'tutorme/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    Sign Up
+{% endblock %}
+
+{% block head_block %}
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+
+{% block body_block %}
+    <div class="container">
+        {% if registered %}
+            <div class="my-form">
+                <strong>{{ registered_message }}</strong><br>
+                <a href="{% url 'tutorme:login' %}">Return to the login page.</a> </br>
+            </div>
+        {% else %}
+            <div class="row centered">
+                <div class="col-md-5 offset-md-1 my-auto left">
+                    <div class="join white-text">
+                        <h1>Join the TutorMe community</h1>
+                        <li>Learn new things from professionals</li>
+                        <li>Teach new things to anyone</li>
+                        <li>Earn the love of the community</li>
+                    </div>
+                </div>
+                <div class="col-md-5 offset-md-1 centered">
+                    <div class="my-form">
+                        <form id = "user_form" method = "post" action = "{% if student %} {% url 'tutorme:register_student' %} {% else %} {% url 'tutorme:register_teacher' %} {% endif %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% if student %}
+                                <h2 class="text-center black-text">Student Sign Up</h2>
+                                {{ user_form.as_p }}
+                                {{ student_form.as_p }}
+                            {% else %}
+                                <h2 class="text-center black-text">Teacher Sign Up</h2>
+
+                                {{ user_form.as_p }}
+                                {% for field in teacher_form %}
+                                    {% if field ==  teacher_form.categories %}
+                                        <br>
+                                        Categories:
+                                        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Press to select</a>
+                                        <!-- Modal used for ading categories to the teacher -->
+                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title ">Please choose your categories</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        {% for checkbox in field %}
+                                                            <li class="list-group-item my-auto left">
+                                                                <label for="{{ checkbox.id_for_label }}">
+                                                                    {{ checkbox.choice_label }}
+                                                                    {{ checkbox.tag.value }}
+                                                                </label>
+                                                                <span class="checkboxes" >{{ checkbox.tag }}</span>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="mydiv">
+                                            <label class="mylabel">{{ field.label }}:</label>
+                                            {{ field }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+
+                                <textarea disabled id="selected_categories" class="form-control textarea" rows="4"></textarea>
+
+                            {% endif %}
+                            <div class="form-group">
+                                <button type="submit" name="submit" class="btn btn-primary login-btn btn-block">Sign up</button>
+                            </div>
+                            <div class="separator black-text">OR</div>
+                            <p class="text-center black-text">Sign up with your social media account</p>
+                            <div class="form-group">
+                                <button class="btn fb btn-block white-text" onclick="register()">
+                                    <img src="{% static 'images/fbLogoWhite.png' %}" class="img-fluid" width="25" height="15" alt="Picture of tutorme" />
+                                    Sign up with Facebook
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block afterBody_block %}
+    <script src="{% static 'javascript/register.js' %}"></script>
+{% endblock %}
